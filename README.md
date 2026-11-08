@@ -296,3 +296,9 @@ Meta Business Suiteなどの投稿管理・公開機能そのものではなく�
 
 - MVPでは、カリキュラムで学んだRailsの範囲で作れる機能に絞ります。
 - スライドのドラッグ並び替え（JSライブラリが必要）や通知機能は本リリースに回し、MVP完成後にキャッチアップしてから組み込みます。
+
+---
+
+## 画面遷移図
+
+Figma：https://www.figma.com/design/AgeyJdcsG5K3auPfiu3soc
