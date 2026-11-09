@@ -302,3 +302,9 @@ Meta Business Suiteなどの投稿管理・公開機能そのものではなく�
 ## 画面遷移図
 
 Figma：https://www.figma.com/design/AgeyJdcsG5K3auPfiu3soc
+
+---
+
+## ER図
+
+Figma：https://www.figma.com/design/AgeyJdcsG5K3auPfiu3soc?node-id=17-388
