@@ -21,3 +21,11 @@ ja:
         status: ステータス
         template_type: 構成テンプレート
         posted_on: 投稿日
+      post/status:
+        idea: ネタ
+        drafting: 構成中
+        ready: 投稿準備完了
+        posted: 投稿済み
+  date:
+    formats:
+      month_day_with_wday: "%-m/%-d（%a）"
