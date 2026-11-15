@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
   <head>
-    <title><%= content_for(:title) || "Karuneta" %></title>
+    <title><%= content_for(:title) || "カルネタ" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Karuneta">
+    <meta name="application-name" content="カルネタ">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -23,9 +23,11 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
+  <body class="min-h-screen flex flex-col bg-page text-ink">
+    <%= render "shared/header_guest" %>
+    <main class="flex-1">
       <%= yield %>
     </main>
+    <%= render "shared/footer" %>
   </body>
 </html>
