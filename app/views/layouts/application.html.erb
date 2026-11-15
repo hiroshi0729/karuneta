@@ -23,12 +23,13 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="min-h-screen flex flex-col bg-page text-ink">
-    <%= render "shared/header_guest" %>
+  <body class="min-h-screen flex flex-col bg-page text-ink <%= "pb-16" if logged_in? %>">
+    <%= render logged_in? ? "shared/header_user" : "shared/header_guest" %>
     <%= render "shared/flash" %>
     <main class="flex-1">
       <%= yield %>
     </main>
     <%= render "shared/footer" %>
+    <%= render "shared/bottom_nav" if logged_in? %>
   </body>
 </html>
