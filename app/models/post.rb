@@ -9,6 +9,19 @@ class Post < ApplicationRecord
   validates :memo, length: { maximum: 1000 }
   validate :category_belongs_to_user
 
+  # 有効なステータスのときだけ絞り込み、空や不正な値なら全件を返す
+  scope :with_status, ->(status) { statuses.key?(status) ? where(status: status) : all }
+  # 投稿予定日が近い順（予定日なしは後ろ）、同じなら新しく登録した順
+  scope :by_schedule, -> { order(arel_table[:scheduled_on].asc.nulls_last).order(created_at: :desc) }
+
+  def self.status_label_for(status)
+    human_attribute_name("status.#{status}")
+  end
+
+  def status_label
+    self.class.status_label_for(status)
+  end
+
   private
 
   def category_belongs_to_user
