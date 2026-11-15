@@ -3,6 +3,7 @@ ja:
     models:
       user: ユーザー
       category: カテゴリ
+      post: ネタ
     attributes:
       user:
         name: ユーザー名
@@ -12,3 +13,11 @@ ja:
       category:
         name: カテゴリ名
         color: 色
+      post:
+        title: タイトル
+        category: カテゴリ
+        scheduled_on: 投稿予定日
+        memo: メモ
+        status: ステータス
+        template_type: 構成テンプレート
+        posted_on: 投稿日
