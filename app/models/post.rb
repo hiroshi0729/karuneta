@@ -22,6 +22,15 @@ class Post < ApplicationRecord
     self.class.status_label_for(status)
   end
 
+  def self.template_type_label_for(template_type)
+    human_attribute_name("template_type.#{template_type}")
+  end
+
+  # テンプレート未選択（nil）のときは nil を返す
+  def template_type_label
+    self.class.template_type_label_for(template_type) if template_type
+  end
+
   private
 
   def category_belongs_to_user

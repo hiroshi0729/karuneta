@@ -26,6 +26,9 @@ ja:
         drafting: 構成中
         ready: 投稿準備完了
         posted: 投稿済み
+      post/template_type:
+        howto: ノウハウ紹介型
+        checklist: チェックリスト型
   date:
     formats:
       month_day_with_wday: "%-m/%-d（%a）"
