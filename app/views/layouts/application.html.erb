@@ -31,5 +31,21 @@
     </main>
     <%= render "shared/footer" %>
     <%= render "shared/bottom_nav" if logged_in? %>
+
+    <%# 削除などの確認ダイアログ（data-turbo-confirm の文章を application.js から表示する） %>
+    <dialog id="confirm-dialog" aria-labelledby="confirm-dialog-title"
+            class="m-auto w-[calc(100%-2rem)] max-w-sm rounded-xl bg-white p-0 text-ink shadow-lg backdrop:bg-gray-900/40">
+      <form method="dialog" class="p-6">
+        <h2 id="confirm-dialog-title" class="text-lg font-bold">本当に削除しますか？</h2>
+        <p data-confirm-message class="mt-3 break-all text-sm text-gray-600"></p>
+        <div class="mt-6 flex gap-3">
+          <%# 間違って削除しないよう、開いたときは「キャンセル」にフォーカスを当てる %>
+          <button type="submit" value="cancel" autofocus
+                  class="flex-1 rounded-md border border-gray-300 bg-white py-3 font-bold text-gray-700">キャンセル</button>
+          <button type="submit" value="confirm"
+                  class="flex-1 rounded-md bg-red-700 py-3 font-bold text-white">削除する</button>
+        </div>
+      </form>
+    </dialog>
   </body>
 </html>

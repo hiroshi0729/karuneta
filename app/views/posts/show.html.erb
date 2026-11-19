@@ -16,10 +16,13 @@
       <dd class="whitespace-pre-wrap break-all"><%= @post.memo.presence || "未入力" %></dd>
     </dl>
 
-    <%# #19 で「削除」ボタンを横に並べるため、横並びの枠に入れておく %>
     <div class="mt-6 flex gap-3">
       <%= link_to "編集", edit_post_path(@post),
                   class: "block flex-1 rounded-md border border-primary bg-white py-3 text-center font-bold text-primary" %>
+      <%= button_to "削除", post_path(@post), method: :delete,
+                    form_class: "flex-1",
+                    form: { data: { turbo_confirm: "ネタを削除すると、作成した構成（スライド）も一緒に削除されます。この操作は元に戻せません。" } },
+                    class: "block w-full rounded-md border border-primary bg-white py-3 text-center font-bold text-primary" %>
     </div>
   </div>
 

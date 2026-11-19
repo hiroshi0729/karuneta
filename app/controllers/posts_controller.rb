@@ -1,5 +1,5 @@
 class PostsController < ApplicationController
-  before_action :set_post, only: %i[show edit update]
+  before_action :set_post, only: %i[show edit update destroy]
 
   def index
     @posts = current_user.posts.includes(:category).with_status(params[:status]).by_schedule
@@ -33,6 +33,11 @@ class PostsController < ApplicationController
       @categories = current_user.categories.order(:created_at)
       render :edit, status: :unprocessable_content
     end
+  end
+
+  def destroy
+    @post.destroy!
+    redirect_to posts_path, notice: "ネタを削除しました", status: :see_other
   end
 
   private
