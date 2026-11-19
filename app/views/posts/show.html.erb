@@ -1,0 +1,48 @@
+<% content_for(:title, "#{@post.title} | カルネタ") %>
+
+<div class="mx-auto max-w-md px-4 py-6">
+  <%= link_to "‹ ネタ一覧に戻る", posts_path, class: "text-sm font-bold text-primary" %>
+
+  <div class="mt-4 rounded-lg bg-white p-4 shadow-sm">
+    <%= render "posts/badges", post: @post %>
+    <h1 class="mt-2 break-all text-xl font-bold"><%= @post.title %></h1>
+
+    <dl class="mt-4 grid grid-cols-[auto_1fr] gap-x-4 gap-y-3 text-sm">
+      <dt class="text-gray-500"><%= Post.human_attribute_name(:scheduled_on) %></dt>
+      <dd><%= @post.scheduled_on ? l(@post.scheduled_on, format: :month_day_with_wday) : "未設定" %></dd>
+
+      <dt class="text-gray-500"><%= Post.human_attribute_name(:memo) %></dt>
+      <%# 改行は CSS（whitespace-pre-wrap）で表示し、内容は通常どおりエスケープする %>
+      <dd class="whitespace-pre-wrap break-all"><%= @post.memo.presence || "未入力" %></dd>
+    </dl>
+  </div>
+
+  <% if @post.template_type.nil? %>
+    <section class="mt-8">
+      <h2 class="text-lg font-bold">構成を作る</h2>
+      <p class="mt-1 text-sm text-gray-500">テンプレートを選ぶと、各スライドの見出しのひな形が入ります。</p>
+
+      <div class="mt-4 flex flex-col gap-3">
+        <% SlideTemplate::LABELS.each_with_index do |(template_type, labels), index| %>
+          <label class="block cursor-pointer rounded-lg border-2 border-transparent bg-white p-4 shadow-sm has-checked:border-primary">
+            <span class="flex items-center gap-2 font-bold">
+              <%= radio_button_tag "template_type", template_type, index.zero?, class: "accent-primary" %>
+              <%= Post.template_type_label_for(template_type) %>（<%= labels.size %>枚）
+            </span>
+            <span class="mt-3 flex flex-wrap gap-1.5">
+              <% labels.each do |label| %>
+                <span class="rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-600"><%= label %></span>
+              <% end %>
+            </span>
+          </label>
+        <% end %>
+      </div>
+
+      <%# スライドの作成は #20 で実装するため、今回は押せない状態にしておく %>
+      <button type="button" disabled
+              class="mt-6 block w-full cursor-not-allowed rounded-md bg-primary py-3 text-center font-bold text-white opacity-50">
+        このテンプレートで構成を作る
+      </button>
+    </section>
+  <% end %>
+</div>
