@@ -1,0 +1,17 @@
+<% content_for(:title, "ネタを編集 | カルネタ") %>
+
+<div class="mx-auto max-w-md px-4 py-6">
+  <h1 class="text-2xl font-bold">ネタを編集</h1>
+
+  <div class="mt-6 rounded-lg bg-white p-6 shadow-sm">
+    <%= form_with model: @post, class: "flex flex-col gap-4" do |f| %>
+      <%= render "posts/form_fields", f: f, post: @post, categories: @categories, show_status: true %>
+
+      <%= f.submit "更新する", class: "mt-2 block w-full cursor-pointer rounded-md bg-primary py-3 text-center font-bold text-white" %>
+    <% end %>
+  </div>
+
+  <div class="mt-6 text-center">
+    <%= link_to "キャンセル（ネタ詳細に戻る）", post_path(@post), class: "text-sm font-bold text-primary" %>
+  </div>
+</div>

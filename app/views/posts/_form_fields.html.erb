@@ -1,0 +1,50 @@
+<%# ネタ登録・編集フォームの共通入力欄。show_status: true のときだけステータスを表示する %>
+<% show_status = local_assigns.fetch(:show_status, false) %>
+
+<% if post.errors.any? %>
+  <div class="rounded-md bg-red-50 p-4 text-sm text-red-700">
+    <ul class="list-disc pl-5">
+      <% post.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<div>
+  <%= f.label :title, "#{Post.human_attribute_name(:title)}（必須）", class: "block text-sm font-bold" %>
+  <%= f.text_field :title, placeholder: "例：LPの改善で問い合わせが増えた事例",
+                   class: "mt-1 block w-full rounded-md border border-gray-300 px-3 py-3 text-base focus:border-primary focus:outline-none" %>
+</div>
+
+<div>
+  <%= f.label :category_id, Post.human_attribute_name(:category), class: "block text-sm font-bold" %>
+  <div class="relative mt-1">
+    <%= f.collection_select :category_id, categories, :id, :name, { include_blank: "選択してください" },
+                            class: "block w-full appearance-none rounded-md border border-gray-300 bg-white py-3 pl-3 pr-10 text-base focus:border-primary focus:outline-none" %>
+    <%= render "posts/select_arrow" %>
+  </div>
+</div>
+
+<div>
+  <%= f.label :scheduled_on, class: "block text-sm font-bold" %>
+  <%= f.date_field :scheduled_on,
+                   class: "mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-3 text-base focus:border-primary focus:outline-none" %>
+</div>
+
+<% if show_status %>
+  <div>
+    <%= f.label :status, class: "block text-sm font-bold" %>
+    <div class="relative mt-1">
+      <%= f.select :status, Post.statuses.keys.map { |status| [Post.status_label_for(status), status] }, {},
+                   class: "block w-full appearance-none rounded-md border border-gray-300 bg-white py-3 pl-3 pr-10 text-base focus:border-primary focus:outline-none" %>
+      <%= render "posts/select_arrow" %>
+    </div>
+  </div>
+<% end %>
+
+<div>
+  <%= f.label :memo, class: "block text-sm font-bold" %>
+  <%= f.text_area :memo, rows: 5, placeholder: "伝えたいこと・参考にしたい事例など",
+                  class: "mt-1 block w-full rounded-md border border-gray-300 px-3 py-3 text-base focus:border-primary focus:outline-none" %>
+</div>
