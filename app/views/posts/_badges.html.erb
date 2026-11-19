@@ -1,0 +1,6 @@
+<div class="flex flex-wrap items-center gap-2">
+  <% if post.category %>
+    <span class="<%= category_badge_class %>" style="<%= category_badge_style(post.category) %>"><%= post.category.name %></span>
+  <% end %>
+  <span class="<%= status_badge_class(post.status) %>"><%= post.status_label %></span>
+</div>

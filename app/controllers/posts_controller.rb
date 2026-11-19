@@ -3,6 +3,10 @@ class PostsController < ApplicationController
     @posts = current_user.posts.includes(:category).with_status(params[:status]).by_schedule
   end
 
+  def show
+    @post = current_user.posts.find(params[:id])
+  end
+
   def new
     @post = current_user.posts.build
     @categories = current_user.categories.order(:created_at)
