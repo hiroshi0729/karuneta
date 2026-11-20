@@ -4,6 +4,7 @@ ja:
       user: ユーザー
       category: カテゴリ
       post: ネタ
+      slide: スライド
     attributes:
       user:
         name: ユーザー名
@@ -29,6 +30,11 @@ ja:
       post/template_type:
         howto: ノウハウ紹介型
         checklist: チェックリスト型
+      slide:
+        position: 順番
+        label: ラベル
+        heading: 見出し
+        body: 本文
   date:
     formats:
       month_day_with_wday: "%-m/%-d（%a）"
