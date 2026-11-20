@@ -1,6 +1,7 @@
 class Post < ApplicationRecord
   belongs_to :user
   belongs_to :category, optional: true
+  has_many :slides, -> { order(:position) }, dependent: :destroy, inverse_of: :post
 
   # 不正な値が送られたときは例外ではなく入力エラーとして扱う
   enum :status, { idea: 0, drafting: 1, ready: 2, posted: 3 }, validate: true
@@ -32,6 +33,23 @@ class Post < ApplicationRecord
   # テンプレート未選択（nil）のときは nil を返す
   def template_type_label
     self.class.template_type_label_for(template_type) if template_type
+  end
+
+  # テンプレートを選んで構成を作る（見出しのひな形が入ったスライドを作り、ステータスを「構成中」にする）
+  # すでに構成がある・テンプレートの種類が不正・保存に失敗したときは、何も変えずに false を返す
+  def build_structure(new_template_type)
+    with_lock do
+      return false if template_type.present? || slides.exists?
+      return false unless self.class.template_types.key?(new_template_type.to_s)
+
+      update!(template_type: new_template_type, status: :drafting)
+      SlideTemplate.labels_for(new_template_type).each.with_index(1) do |label, position|
+        slides.create!(position: position, label: label)
+      end
+    end
+    true
+  rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotUnique
+    false
   end
 
   private

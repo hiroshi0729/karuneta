@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_15_223412) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_20_000629) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -39,6 +39,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_15_223412) do
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
+  create_table "slides", force: :cascade do |t|
+    t.bigint "post_id", null: false
+    t.integer "position", null: false
+    t.string "label", null: false
+    t.string "heading"
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id", "position"], name: "index_slides_on_post_id_and_position", unique: true
+    t.index ["post_id"], name: "index_slides_on_post_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name", null: false
     t.string "email", null: false
@@ -52,4 +64,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_15_223412) do
   add_foreign_key "categories", "users"
   add_foreign_key "posts", "categories"
   add_foreign_key "posts", "users"
+  add_foreign_key "slides", "posts"
 end
