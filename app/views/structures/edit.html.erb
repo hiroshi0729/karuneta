@@ -48,6 +48,14 @@
       <% end %>
     </div>
 
-    <%= f.submit "保存する", class: "mt-6 block w-full cursor-pointer rounded-md bg-primary py-3 text-center font-bold text-white" %>
+    <div class="mt-6 flex gap-3">
+      <%= f.submit "保存する",
+                   class: "block flex-1 cursor-pointer rounded-md border border-primary bg-white py-3 text-center font-bold text-primary" %>
+      <%# 「投稿準備完了」「投稿済み」のときは出さない %>
+      <% if @post.idea? || @post.drafting? %>
+        <%= f.submit "投稿準備完了にする", name: "mark_ready",
+                     class: "block flex-1 cursor-pointer rounded-md border border-primary bg-primary py-3 text-center font-bold text-white" %>
+      <% end %>
+    </div>
   <% end %>
 </div>

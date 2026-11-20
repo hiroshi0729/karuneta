@@ -14,8 +14,9 @@ class StructuresController < ApplicationController
   def edit; end
 
   def update
-    if @post.update(structure_params)
-      redirect_to post_path(@post), notice: "構成を保存しました"
+    mark_ready = params[:mark_ready].present?
+    if @post.update_structure(structure_params, mark_ready: mark_ready)
+      redirect_to post_path(@post), notice: mark_ready ? "構成を保存し、投稿準備完了にしました" : "構成を保存しました"
     else
       render :edit, status: :unprocessable_content
     end
