@@ -1,0 +1,53 @@
+<% content_for(:title, "構成エディタ | カルネタ") %>
+
+<div class="mx-auto max-w-md px-4 py-6">
+  <%= link_to "‹ ネタ詳細に戻る", post_path(@post), class: "text-sm font-bold text-primary" %>
+
+  <div class="mt-4">
+    <%= render "posts/badges", post: @post %>
+    <h1 class="mt-2 break-all text-xl font-bold"><%= @post.title %></h1>
+    <p class="mt-1 text-xs text-gray-500">テンプレート：<%= @post.template_type_label %></p>
+  </div>
+
+  <p class="mt-4 rounded-md border border-dashed border-gray-300 p-3 text-xs text-gray-500">
+    ここでは各スライドの文章（見出し・本文）だけを作ります。デザインは、この構成を見ながらFigmaなどで作成します。
+  </p>
+
+  <%= form_with model: @post, url: post_structure_path(@post), method: :patch, class: "mt-6" do |f| %>
+    <% if @post.errors.any? %>
+      <div class="mb-4 rounded-md bg-red-50 p-4 text-sm text-red-700">
+        <ul class="list-disc pl-5">
+          <% @post.errors.full_messages.uniq.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="flex flex-col gap-4">
+      <%= f.fields_for :slides do |sf| %>
+        <% slide = sf.object %>
+        <div class="rounded-lg bg-white p-4 shadow-sm">
+          <div class="flex items-center gap-2">
+            <span class="rounded bg-footer px-2 py-0.5 text-xs font-bold text-white"><%= slide.position %>枚目</span>
+            <span class="text-sm font-bold"><%= slide.label %></span>
+          </div>
+
+          <div class="mt-4">
+            <%= sf.label :heading, Slide.human_attribute_name(:heading), class: "block text-sm font-bold" %>
+            <%= sf.text_field :heading, placeholder: SlideTemplate.heading_placeholder_for(slide.label),
+                              class: "mt-1 block w-full rounded-md border border-gray-300 px-3 py-3 text-base focus:border-primary focus:outline-none" %>
+          </div>
+
+          <div class="mt-4">
+            <%= sf.label :body, Slide.human_attribute_name(:body), class: "block text-sm font-bold" %>
+            <%= sf.text_area :body, rows: 4, placeholder: "本文を入力",
+                             class: "mt-1 block w-full rounded-md border border-gray-300 px-3 py-3 text-base focus:border-primary focus:outline-none" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <%= f.submit "保存する", class: "mt-6 block w-full cursor-pointer rounded-md bg-primary py-3 text-center font-bold text-white" %>
+  <% end %>
+</div>
