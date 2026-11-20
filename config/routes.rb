@@ -20,6 +20,6 @@ Rails.application.routes.draw do
 
   resources :categories, only: %i[index create edit update destroy]
   resources :posts, only: %i[index show new create edit update destroy] do
-    resource :structure, only: :create
+    resource :structure, only: %i[create edit update]
   end
 end

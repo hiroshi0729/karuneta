@@ -2,6 +2,8 @@ class Post < ApplicationRecord
   belongs_to :user
   belongs_to :category, optional: true
   has_many :slides, -> { order(:position) }, dependent: :destroy, inverse_of: :post
+  # 構成エディタでは既存スライドの見出し・本文の更新だけを受け付ける（id のない新規作成は無視し、削除も許可しない）
+  accepts_nested_attributes_for :slides, reject_if: ->(attributes) { attributes["id"].blank? }
 
   # 不正な値が送られたときは例外ではなく入力エラーとして扱う
   enum :status, { idea: 0, drafting: 1, ready: 2, posted: 3 }, validate: true

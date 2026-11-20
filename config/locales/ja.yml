@@ -35,6 +35,9 @@ ja:
         label: ラベル
         heading: 見出し
         body: 本文
+      post/slides:
+        heading: スライドの見出し
+        body: スライドの本文
   date:
     formats:
       month_day_with_wday: "%-m/%-d（%a）"
