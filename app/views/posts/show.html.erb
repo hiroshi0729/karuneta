@@ -11,6 +11,11 @@
       <dt class="text-gray-500"><%= Post.human_attribute_name(:scheduled_on) %></dt>
       <dd><%= @post.scheduled_on ? l(@post.scheduled_on, format: :month_day_with_wday) : "未設定" %></dd>
 
+      <% if @post.posted_on %>
+        <dt class="text-gray-500"><%= Post.human_attribute_name(:posted_on) %></dt>
+        <dd><%= l(@post.posted_on, format: :month_day_with_wday) %></dd>
+      <% end %>
+
       <dt class="text-gray-500"><%= Post.human_attribute_name(:memo) %></dt>
       <%# 改行は CSS（whitespace-pre-wrap）で表示し、内容は通常どおりエスケープする %>
       <dd class="whitespace-pre-wrap break-all"><%= @post.memo.presence || "未入力" %></dd>
@@ -77,6 +82,12 @@
       <div class="mt-4 flex gap-3">
         <%= link_to "構成を編集", edit_post_structure_path(@post),
                     class: "block flex-1 rounded-md border border-primary bg-white py-3 text-center font-bold text-primary" %>
+        <% unless @post.posted? %>
+          <%= button_to "投稿済みにする", post_status_path(@post), method: :patch,
+                        params: { status: "posted" },
+                        form_class: "flex-1",
+                        class: "block w-full cursor-pointer rounded-md border border-primary bg-primary py-3 text-center font-bold text-white" %>
+        <% end %>
       </div>
     </section>
   <% end %>

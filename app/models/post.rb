@@ -9,6 +9,9 @@ class Post < ApplicationRecord
   enum :status, { idea: 0, drafting: 1, ready: 2, posted: 3 }, validate: true
   enum :template_type, { howto: 0, checklist: 1 }
 
+  # ネタ詳細画面のボタンから変えてよいステータス
+  CHANGEABLE_STATUSES = %w[ready posted].freeze
+
   validates :title, presence: true, length: { maximum: 100 }
   validates :memo, length: { maximum: 1000 }
   validate :category_belongs_to_user
@@ -52,6 +55,27 @@ class Post < ApplicationRecord
     true
   rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotUnique
     false
+  end
+
+  # 構成（スライドの見出し・本文）を保存する。mark_ready のときはステータスも「投稿準備完了」にする
+  # 1回の save でまとめて保存するので、どちらかが失敗したら両方とも保存されない
+  # すでに「投稿準備完了」「投稿済み」のときはステータスを戻さない
+  def update_structure(attributes, mark_ready: false)
+    assign_attributes(attributes)
+    self.status = :ready if mark_ready && (idea? || drafting?)
+    return true if save
+
+    # 失敗して画面を再表示するとき、ステータスは元のまま見せる
+    restore_attributes(%i[status])
+    false
+  end
+
+  # 「投稿準備完了」「投稿済み」にだけ変更できる（投稿日は sync_posted_on で記録される）
+  # それ以外の値（空・不正な値・idea・drafting）のときは何もせず false を返す
+  def change_status(new_status)
+    return false unless CHANGEABLE_STATUSES.include?(new_status.to_s)
+
+    update(status: new_status)
   end
 
   private
