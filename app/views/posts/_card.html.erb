@@ -1,0 +1,7 @@
+<%= link_to post_path(post), class: "block rounded-lg bg-white p-4 shadow-sm" do %>
+  <%= render "posts/badges", post: post %>
+  <p class="mt-2 break-all font-bold"><%= post.title %></p>
+  <% if post.scheduled_on %>
+    <p class="mt-2 text-sm text-gray-500">投稿予定日：<%= l(post.scheduled_on, format: :month_day_with_wday) %></p>
+  <% end %>
+<% end %>

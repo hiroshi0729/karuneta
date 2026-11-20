@@ -22,6 +22,8 @@ class Post < ApplicationRecord
   scope :with_status, ->(status) { statuses.key?(status) ? where(status: status) : all }
   # 投稿予定日が近い順（予定日なしは後ろ）、同じなら新しく登録した順
   scope :by_schedule, -> { order(arel_table[:scheduled_on].asc.nulls_last).order(created_at: :desc) }
+  # 投稿予定が近いネタ（投稿済み以外で予定日があるもの）。予定日を過ぎたものも含めて日付の古い順、同じなら新しく登録した順
+  scope :upcoming, -> { where.not(status: :posted).where.not(scheduled_on: nil).order(scheduled_on: :asc, created_at: :desc) }
 
   def self.status_label_for(status)
     human_attribute_name("status.#{status}")
