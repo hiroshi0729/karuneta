@@ -17,6 +17,22 @@ RSpec.describe "ログイン・ログアウト", type: :request do
       expect(flash[:notice]).to eq("ログインしました")
     end
 
+    describe "ログインが必要なページを開こうとしてログイン画面に移ったとき" do
+      before { get posts_path }
+
+      it "ログイン後はそのページに移動する", :aggregate_failures do
+        login(user)
+        expect(response).to redirect_to(posts_url)
+        expect(flash[:notice]).to eq("ログインしました")
+      end
+
+      it "移動先は1回だけ使われ、次のログインではホームに移動する" do
+        login(user)
+        login(user)
+        expect(response).to redirect_to(home_path)
+      end
+    end
+
     it "パスワードが違うとログインできず、エラーが表示される", :aggregate_failures do
       login(user, password: "wrongpass")
       expect(response).to have_http_status(:unprocessable_content)

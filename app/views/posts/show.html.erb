@@ -31,33 +31,7 @@
     </div>
   </div>
 
-  <% if @post.template_type.nil? %>
-    <section class="mt-8">
-      <h2 class="text-lg font-bold">構成を作る</h2>
-      <p class="mt-1 text-sm text-gray-500">テンプレートを選ぶと、各スライドの見出しのひな形が入ります。</p>
-
-      <%= form_with url: post_structure_path(@post), method: :post do |f| %>
-        <div class="mt-4 flex flex-col gap-3">
-          <% SlideTemplate::LABELS.each_with_index do |(template_type, labels), index| %>
-            <label class="block cursor-pointer rounded-lg border-2 border-transparent bg-white p-4 shadow-sm has-checked:border-primary">
-              <span class="flex items-center gap-2 font-bold">
-                <%= radio_button_tag "template_type", template_type, index.zero?, class: "accent-primary" %>
-                <%= Post.template_type_label_for(template_type) %>（<%= labels.size %>枚）
-              </span>
-              <span class="mt-3 flex flex-wrap gap-1.5">
-                <% labels.each do |label| %>
-                  <span class="rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-600"><%= label %></span>
-                <% end %>
-              </span>
-            </label>
-          <% end %>
-        </div>
-
-        <%= f.submit "このテンプレートで構成を作る",
-                     class: "mt-6 block w-full cursor-pointer rounded-md bg-primary py-3 text-center font-bold text-white" %>
-      <% end %>
-    </section>
-  <% else %>
+  <% if @post.structure_created? %>
     <section class="mt-8">
       <h2 class="text-lg font-bold">構成（<%= @post.template_type_label %>・<%= @post.slides.size %>枚）</h2>
 
@@ -89,6 +63,32 @@
                         class: "block w-full cursor-pointer rounded-md border border-primary bg-primary py-3 text-center font-bold text-white" %>
         <% end %>
       </div>
+    </section>
+  <% else %>
+    <section class="mt-8">
+      <h2 class="text-lg font-bold">構成を作る</h2>
+      <p class="mt-1 text-sm text-gray-500">テンプレートを選ぶと、各スライドの見出しのひな形が入ります。</p>
+
+      <%= form_with url: post_structure_path(@post), method: :post do |f| %>
+        <div class="mt-4 flex flex-col gap-3">
+          <% SlideTemplate::LABELS.each_with_index do |(template_type, labels), index| %>
+            <label class="block cursor-pointer rounded-lg border-2 border-transparent bg-white p-4 shadow-sm has-checked:border-primary">
+              <span class="flex items-center gap-2 font-bold">
+                <%= radio_button_tag "template_type", template_type, index.zero?, class: "accent-primary" %>
+                <%= Post.template_type_label_for(template_type) %>（<%= labels.size %>枚）
+              </span>
+              <span class="mt-3 flex flex-wrap gap-1.5">
+                <% labels.each do |label| %>
+                  <span class="rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-600"><%= label %></span>
+                <% end %>
+              </span>
+            </label>
+          <% end %>
+        </div>
+
+        <%= f.submit "このテンプレートで構成を作る",
+                     class: "mt-6 block w-full cursor-pointer rounded-md bg-primary py-3 text-center font-bold text-white" %>
+      <% end %>
     </section>
   <% end %>
 </div>

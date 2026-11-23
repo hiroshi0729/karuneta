@@ -5,7 +5,7 @@ class UserSessionsController < ApplicationController
 
   def create
     if login(params[:email], params[:password])
-      redirect_back_or_to home_path, notice: "ログインしました"
+      redirect_to_before_login_path home_path, notice: "ログインしました"
     else
       flash.now[:alert] = "メールアドレスまたはパスワードが違います"
       render :new, status: :unprocessable_content

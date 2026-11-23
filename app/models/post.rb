@@ -24,6 +24,8 @@ class Post < ApplicationRecord
   scope :by_schedule, -> { order(arel_table[:scheduled_on].asc.nulls_last).order(created_at: :desc) }
   # 投稿予定が近いネタ（投稿済み以外で予定日があるもの）。予定日を過ぎたものも含めて日付の古い順、同じなら新しく登録した順
   scope :upcoming, -> { where.not(status: :posted).where.not(scheduled_on: nil).order(scheduled_on: :asc, created_at: :desc) }
+  # 最近更新した順
+  scope :recently_updated, -> { order(updated_at: :desc) }
 
   def self.status_label_for(status)
     human_attribute_name("status.#{status}")
@@ -40,6 +42,16 @@ class Post < ApplicationRecord
   # テンプレート未選択（nil）のときは nil を返す
   def template_type_label
     self.class.template_type_label_for(template_type) if template_type
+  end
+
+  # テンプレートを選んで構成を作成済みか
+  def structure_created?
+    template_type.present?
+  end
+
+  # 「投稿準備完了」にできるか（「投稿準備完了」「投稿済み」からは戻さない）
+  def can_mark_ready?
+    idea? || drafting?
   end
 
   # テンプレートを選んで構成を作る（見出しのひな形が入ったスライドを作り、ステータスを「構成中」にする）
@@ -64,7 +76,7 @@ class Post < ApplicationRecord
   # すでに「投稿準備完了」「投稿済み」のときはステータスを戻さない
   def update_structure(attributes, mark_ready: false)
     assign_attributes(attributes)
-    self.status = :ready if mark_ready && (idea? || drafting?)
+    self.status = :ready if mark_ready && can_mark_ready?
     return true if save
 
     # 失敗して画面を再表示するとき、ステータスは元のまま見せる

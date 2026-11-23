@@ -28,7 +28,7 @@ Rails.application.config.sorcery.configure do |config|
   # the method of the same name defined in Rails 7.
   # Default: `false`
   #
-  # config.use_redirect_back_or_to_by_rails =
+  config.use_redirect_back_or_to_by_rails = true
 
   # Set domain option for cookies; Useful for remember_me submodule.
   # Default: `nil`

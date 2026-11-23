@@ -6,4 +6,7 @@ class Category < ApplicationRecord
 
   validates :name, presence: true, length: { maximum: 20 }, uniqueness: { scope: :user_id }
   validates :color, presence: true, inclusion: { in: COLORS }
+
+  # 登録した順
+  scope :ordered, -> { order(:created_at) }
 end
