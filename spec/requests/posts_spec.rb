@@ -29,6 +29,16 @@ RSpec.describe "ネタ", type: :request do
       get posts_path, params: { status: "unknown" }
       expect(response.body).to include("アイデア段階のネタ", "構成を作っているネタ")
     end
+
+    # N+1 があれば Bullet.raise によって例外になり、このテストは失敗する
+    it "カテゴリ付きのネタが複数あっても N+1 にならない", :aggregate_failures do
+      create(:post, user: user, title: "カテゴリAのネタ", category: create(:category, user: user, name: "カテゴリA"))
+      create(:post, user: user, title: "カテゴリBのネタ", category: create(:category, user: user, name: "カテゴリB"))
+
+      get posts_path
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("カテゴリA", "カテゴリB")
+    end
   end
 
   describe "GET /posts/:id" do

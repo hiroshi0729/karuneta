@@ -50,4 +50,10 @@ Rails.application.configure do
 
   # Raise error when a before_action's only/except options reference missing actions.
   config.action_controller.raise_on_missing_callback_actions = true
+
+  # N+1 や使っていない includes があればテストを失敗させる
+  config.after_initialize do
+    Bullet.enable = true
+    Bullet.raise = true
+  end
 end
