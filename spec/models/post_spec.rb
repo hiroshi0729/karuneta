@@ -101,6 +101,33 @@ RSpec.describe Post, type: :model do
     end
   end
 
+  describe ".recently_updated" do
+    it "最近更新した順に並ぶ" do
+      older = create(:post, updated_at: 2.days.ago)
+      newer = create(:post, updated_at: 1.day.ago)
+      expect(described_class.recently_updated).to eq([ newer, older ])
+    end
+  end
+
+  describe "#structure_created?" do
+    it "構成を作る前は false" do
+      expect(create(:post).structure_created?).to be false
+    end
+
+    it "構成を作ったあとは true" do
+      post = create(:post).tap { |p| p.build_structure(:howto) }
+      expect(post.structure_created?).to be true
+    end
+  end
+
+  describe "#can_mark_ready?" do
+    { idea: true, drafting: true, ready: false, posted: false }.each do |status, expected|
+      it "#{status} のときは #{expected}" do
+        expect(build(:post, status: status).can_mark_ready?).to be expected
+      end
+    end
+  end
+
   describe "投稿日（posted_on）の記録" do
     around { |example| travel_to(Date.new(2026, 11, 23)) { example.run } }
 

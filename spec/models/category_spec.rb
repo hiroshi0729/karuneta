@@ -37,6 +37,15 @@ RSpec.describe Category, type: :model do
     end
   end
 
+  describe ".ordered" do
+    it "登録した順に並ぶ" do
+      user = create(:user)
+      newer = create(:category, user: user, created_at: 1.day.ago)
+      older = create(:category, user: user, created_at: 2.days.ago)
+      expect(user.categories.ordered).to eq([ older, newer ])
+    end
+  end
+
   describe "削除" do
     it "カテゴリを削除すると、そのカテゴリのネタは残り、カテゴリが nil になる", :aggregate_failures do
       category = create(:category)

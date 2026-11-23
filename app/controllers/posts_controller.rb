@@ -1,5 +1,6 @@
 class PostsController < ApplicationController
   before_action :set_post, only: %i[show edit update destroy]
+  before_action :set_categories, only: %i[new create edit update]
 
   def index
     @posts = current_user.posts.includes(:category).with_status(params[:status]).by_schedule
@@ -9,7 +10,6 @@ class PostsController < ApplicationController
 
   def new
     @post = current_user.posts.build
-    @categories = current_user.categories.order(:created_at)
   end
 
   def create
@@ -17,20 +17,16 @@ class PostsController < ApplicationController
     if @post.save
       redirect_to posts_path, notice: "ネタを登録しました"
     else
-      @categories = current_user.categories.order(:created_at)
       render :new, status: :unprocessable_content
     end
   end
 
-  def edit
-    @categories = current_user.categories.order(:created_at)
-  end
+  def edit; end
 
   def update
     if @post.update(update_post_params)
       redirect_to post_path(@post), notice: "ネタを更新しました"
     else
-      @categories = current_user.categories.order(:created_at)
       render :edit, status: :unprocessable_content
     end
   end
@@ -45,6 +41,11 @@ class PostsController < ApplicationController
   # 自分のネタだけを取得する（他人のネタは 404）
   def set_post
     @post = current_user.posts.find(params[:id])
+  end
+
+  # フォームのカテゴリ選択肢（自分のカテゴリだけ）。リレーションは遅延評価なので、保存に成功したときは SQL を実行しない
+  def set_categories
+    @categories = current_user.categories.ordered
   end
 
   def post_params

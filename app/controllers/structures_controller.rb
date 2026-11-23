@@ -29,7 +29,7 @@ class StructuresController < ApplicationController
   end
 
   def require_structure
-    redirect_to post_path(@post), alert: "先に構成を作ってください" if @post.template_type.nil?
+    redirect_to post_path(@post), alert: "先に構成を作ってください" unless @post.structure_created?
   end
 
   # 見出し・本文だけを受け取る（並び順・ラベル・ネタは変更させない）

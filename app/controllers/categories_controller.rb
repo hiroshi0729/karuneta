@@ -1,8 +1,8 @@
 class CategoriesController < ApplicationController
   before_action :set_category, only: %i[edit update destroy]
+  before_action :set_categories, only: %i[index create]
 
   def index
-    @categories = current_user.categories.order(:created_at)
     @category = current_user.categories.build(color: Category::COLORS.first)
   end
 
@@ -11,7 +11,6 @@ class CategoriesController < ApplicationController
     if @category.save
       redirect_to categories_path, notice: "カテゴリを追加しました"
     else
-      @categories = current_user.categories.order(:created_at)
       render :index, status: :unprocessable_content
     end
   end
@@ -35,6 +34,11 @@ class CategoriesController < ApplicationController
 
   def set_category
     @category = current_user.categories.find(params[:id])
+  end
+
+  # 一覧に出す自分のカテゴリ。リレーションは遅延評価なので、保存に成功したときは SQL を実行しない
+  def set_categories
+    @categories = current_user.categories.ordered
   end
 
   def category_params
