@@ -12,4 +12,12 @@ RSpec.describe "静的ページ", type: :request do
       expect(response.body).to include("思いついたネタを、")
     end
   end
+
+  describe "ログイン中にトップページを開いたとき" do
+    it "ホームに移動する" do
+      login(create(:user))
+      get root_path
+      expect(response).to redirect_to(home_path)
+    end
+  end
 end
